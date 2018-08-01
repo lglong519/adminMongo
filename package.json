@@ -13,6 +13,7 @@
     "url": "https://github.com/mrvautin/adminmongo/issues"
   },
   "scripts": {
+    "eslint": "gulp eslint",
     "start": "node app.js",
     "test": "find ./tests -name '*.js' | xargs mocha -R spec -t 5000",
     "packageOsx": "electron-packager ./ adminMongo --out=releases/ --platform=darwin --arch=x64 --prune --overwrite --ignore=releases/* --icon=public/logo.icns",
@@ -71,6 +72,7 @@
     "ncp": "^2.0.0",
     "nedb": "^1.8.0",
     "node-delete": "^0.1.2",
+    "require-dir": "^1.0.0",
     "serve-favicon": "~2.4.3"
   },
   "license": "MIT",
@@ -78,10 +80,12 @@
     "chai": "^3.5.0",
     "colors": "^1.1.2",
     "electron-prebuilt": "^1.2.8",
-    "eslint": "^3.2.0",
-    "eslint-config-standard": "^5.3.5",
+    "eslint": "^5.2.0",
+    "eslint-config-lglong519": "github:lglong519/eslint-config",
     "eslint-plugin-promise": "^2.0.0",
-    "eslint-plugin-standard": "^2.0.0",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^5.0.0",
+    "gulp-if": "^2.0.2",
     "jsdom": "^9.4.1",
     "mocha": "^2.5.3",
     "mocha-jsdom": "^1.1.0",

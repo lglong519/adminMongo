@@ -1,0 +1,8 @@
+{
+	"apps": [
+		{
+			"name": "mongo",
+			"script": "./app.js"
+		}
+	]
+}
