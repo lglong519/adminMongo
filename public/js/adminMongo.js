@@ -475,10 +475,24 @@ function paginate () {
 
 			// clear the div first
 			$('#coll_docs').empty();
+
+			let table = `
+				<div class="col-xs-12 col-md-12 col-lg-12">
+					<table class="table table-bordered">
+						<thead>
+							<tr id="docKeys"></tr>
+						</thead>
+						<tbody id="docLines"></tbody>
+					</table>
+				</div>
+				`;
+			$('#coll_docs').append(table);
+
 			let escaper = $('<div></div>');
+			let keys = [];
 			for (let i = 0; i < response.data.length; i++) {
 				escaper[0].textContent = JSON.stringify(response.data[i], null, 4);
-				let inner_html = `<div class="col-xs-12 col-md-10 col-lg-10 no-side-pad"><pre class="code-block ${docClass}"><i class="fa fa-chevron-down code-block_expand"></i><code class="json">${escaper[0].innerHTML}</code></pre></div>`;
+				let inner_html = `<div class="col-xs-12 col-md-10 col-lg-10 no-side-pad d-none"><pre class="code-block ${docClass}"><i class="fa fa-chevron-down code-block_expand"></i><code class="json">${escaper[0].innerHTML}</code></pre></div>`;
 				inner_html += '<div class="col-md-2 col-lg-2 pad-bottom no-pad-right justifiedButtons">';
 				inner_html += '<div class="btn-group btn-group-justified justifiedButtons" role="group" aria-label="...">';
 				inner_html += `<a href="#" class="btn btn-danger btn-sm" onclick="deleteDoc('${response.data[i]._id}')">${response.deleteButton}</a>`;
@@ -486,7 +500,37 @@ function paginate () {
 				inner_html += `<a href="${$('#app_context').val()}/app/${conn_name}/${db_name}/${coll_name}/edit/${response.data[i]._id}" class="btn btn-success btn-sm">${response.editButton}</a>`;
 				inner_html += '</div></div>';
 				$('#coll_docs').append(inner_html);
+
+				if (!keys.length) {
+					keys = Object.keys(response.data[i]);
+				}
+				let cells = cellGenerator(keys.length);
+				for (let key in response.data[i]) {
+					let index = keys.indexOf(key);
+					if (index < 0) {
+						keys.push(key);
+						cellsUpdate(cells);
+						index = keys.length - 1;
+					}
+					let prop = response.data[i][key];
+					let type = Object.prototype.toString.call(prop);
+					if (type === '[object Object]') {
+						cellsUpdate(cells, index, '{Object}');
+						continue;
+					}
+					if (type === '[object Array]') {
+						cellsUpdate(cells, index, '[Array]');
+						continue;
+					}
+					if ((/^\d{4}-\d{2}-\d{2}T(.*)?Z$/).test(prop)) {
+						cellsUpdate(cells, index, formatTime(prop));
+					}
+					cellsUpdate(cells, index, prop);
+				}
+				$('#docLines').append(`<tr>${cells.join('')}</tr>`);
 			}
+			$('#docKeys').append(thGenerator(keys));
+
 			// Bind the DropDown Select For Fields
 			let option = '';
 			for (let x = 0; x < response.fields.length; x++) {
@@ -661,4 +705,49 @@ function show_notification (msg, type, reload_page, timeout) {
 			location.reload();
 		}
 	});
+}
+
+function formatTime (date) {
+	if (!(date instanceof Date)) {
+		date = new Date(date);
+	}
+	const year = date.getFullYear();
+	const month = date.getMonth() + 1;
+	const day = date.getDate();
+	const hour = date.getHours();
+	const minute = date.getMinutes();
+	const second = date.getSeconds();
+
+	return `${[year, month, day].map(formatNumber).join('-')} ${[hour, minute, second].map(formatNumber).join(':')}`;
+}
+
+function formatNumber (n) {
+	n = n.toString();
+	return n[1] ? n : `0${n}`;
+}
+
+function cellGenerator (length) {
+	let tds = [];
+	for (let i = 0; i < length; i++) {
+		tds.push('<td>null</td>');
+	}
+	return tds;
+}
+function cellsUpdate (cells, index, val) {
+	if (index !== undefined) {
+		cells[index] = cells[index].replace('null', val);
+	} else {
+		cells.push('<td>null</td>');
+	}
+}
+function thGenerator (keys) {
+	let ths = [];
+	for (let i = 0; i < keys.length; i++) {
+		if (keys[i].endsWith('At')) {
+			ths.push(`<th class="td-min-width">${keys[i]}</th>`);
+			continue;
+		}
+		ths.push(`<th>${keys[i]}</th>`);
+	}
+	return ths.join('');
 }

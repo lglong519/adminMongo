@@ -32,7 +32,7 @@ let i18n = new (require('i18n-2'))({
 	locales: ['en', 'de', 'es', 'ru', 'zh-cn'],
 	directory: path.join(dir_base, 'locales/')
 });
-
+i18n.setLocale('zh-cn');
 // setup DB for server stats
 let Datastore = require('nedb');
 let db = new Datastore({ filename: path.join(dir_base, 'data/dbStats.db'), autoload: true });
