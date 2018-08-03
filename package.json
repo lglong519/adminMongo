@@ -63,12 +63,12 @@
     "lodash": "^4.13.1",
     "moment": "^2.14.1",
     "mongo-uri": "^0.1.2",
-    "mongodb": "^2.2.4",
+    "mongodb": "^2.2.36",
     "mongodb-backup": "^1.6.4",
     "mongodb-extended-json": "^1.7.0",
     "mongodb-restore": "^1.5.4",
     "morgan": "~1.9.0",
-    "nconf": "^0.8.4",
+    "nconf": "^0.8.5",
     "ncp": "^2.0.0",
     "nedb": "^1.8.0",
     "node-delete": "^0.1.2",
@@ -79,7 +79,6 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "colors": "^1.1.2",
-    "electron-prebuilt": "^1.2.8",
     "eslint": "^5.2.0",
     "eslint-config-lglong519": "github:lglong519/eslint-config",
     "eslint-plugin-promise": "^2.0.0",
@@ -89,9 +88,8 @@
     "gulp-if": "^2.0.2",
     "gulp-sass": "^4.0.1",
     "gulp-strip-css-comments": "^2.0.0",
-    "jsdom": "^9.4.1",
-    "mocha": "^2.5.3",
-    "mocha-jsdom": "^1.1.0",
+    "mocha": "^5.2.0",
+    "mocha-jsdom": "^1.2.0",
     "supertest": "^1.2.0"
   }
 }

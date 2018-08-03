@@ -477,13 +477,27 @@ function paginate () {
 			$('#coll_docs').empty();
 
 			let table = `
-				<div class="col-xs-12 col-md-12 col-lg-12">
-					<table class="table table-bordered">
-						<thead>
-							<tr id="docKeys"></tr>
-						</thead>
-						<tbody id="docLines"></tbody>
-					</table>
+				<div class="col-xs-12 col-md-12 col-lg-12 no-wrap">
+					<div class="d-inline-block">
+						<table class="table table-bordered bg-grey">
+							<thead>
+								<tr id="docKeys"></tr>
+							</thead>
+							<tbody id="docLines"></tbody>
+						</table>
+					</div>
+					<div class="d-inline-block">
+						<table class="table table-bordered">
+							<thead>
+								<tr class="text-white">
+									<th class="bg-danger">删除</th>
+									<th class="bg-info">查看</th>
+									<th class="bg-success">编辑</th>
+								</tr>
+							</thead>
+							<tbody id="operatorLines"></tbody>
+						</table>
+					</div>
 				</div>
 				`;
 			$('#coll_docs').append(table);
@@ -493,7 +507,7 @@ function paginate () {
 			for (let i = 0; i < response.data.length; i++) {
 				escaper[0].textContent = JSON.stringify(response.data[i], null, 4);
 				let inner_html = `<div class="col-xs-12 col-md-10 col-lg-10 no-side-pad d-none"><pre class="code-block ${docClass}"><i class="fa fa-chevron-down code-block_expand"></i><code class="json">${escaper[0].innerHTML}</code></pre></div>`;
-				inner_html += '<div class="col-md-2 col-lg-2 pad-bottom no-pad-right justifiedButtons">';
+				inner_html += '<div class="col-md-2 col-lg-2 pad-bottom no-pad-right justifiedButtons d-none">';
 				inner_html += '<div class="btn-group btn-group-justified justifiedButtons" role="group" aria-label="...">';
 				inner_html += `<a href="#" class="btn btn-danger btn-sm" onclick="deleteDoc('${response.data[i]._id}')">${response.deleteButton}</a>`;
 				inner_html += `<a href="${$('#app_context').val()}/app/${conn_name}/${db_name}/${coll_name}/${response.data[i]._id}" class="btn btn-info btn-sm">${response.linkButton}</a>`;
@@ -528,6 +542,13 @@ function paginate () {
 					cellsUpdate(cells, index, prop);
 				}
 				$('#docLines').append(`<tr>${cells.join('')}</tr>`);
+
+				let operatorCells = cellGenerator(3);
+				cellsUpdate(operatorCells, 0, `<a href="#" onclick="deleteDoc('${response.data[i]._id}')">${response.deleteButton}</a>`);
+				cellsUpdate(operatorCells, 1, `<a href="${$('#app_context').val()}/app/${conn_name}/${db_name}/${coll_name}/${response.data[i]._id}">${response.linkButton}</a>`);
+				cellsUpdate(operatorCells, 2, `<a href="${$('#app_context').val()}/app/${conn_name}/${db_name}/${coll_name}/edit/${response.data[i]._id}">${response.editButton}</a>`);
+				$('#operatorLines').append(`<tr>${operatorCells.join('')}</tr>`);
+
 			}
 			$('#docKeys').append(thGenerator(keys));
 
