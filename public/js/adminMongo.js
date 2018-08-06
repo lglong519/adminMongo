@@ -381,6 +381,30 @@ $(document).ready(() => {
 	$(document).on('click', '.btnConnConnect', function () {
 		window.location.href = `${$('#app_context').val()}/app/${$(this).parents('.conn_id').attr('id')}`;
 	});
+	// JSON 或者 表格方式显示数据
+	let viewTypes = ['list', 'table'];
+	if ($('#viewType')) {
+		if (localStorage.getItem('view')) {
+			$(`#viewType .coll-${localStorage.getItem('view')}`).addClass('label-success');
+		} else {
+			$('#viewType .coll-list').addClass('label-success');
+			localStorage.setItem('view', 'list');
+		}
+	}
+	viewTypes.forEach(type => {
+		$(`#viewType .coll-${type}`).click(function () {
+			if ($(this).hasClass('label-success')) {
+				return;
+			}
+			$(this).addClass('label-success');
+			$(`#viewType .coll-${'listtable'.replace(type, '')}`).removeClass('label-success');
+
+			$(`.${type}-cells`).removeClass('d-none');
+			$(`.${'listtable'.replace(type, '')}-cells`).addClass('d-none');
+
+			localStorage.setItem('view', type);
+		});
+	});
 });
 
 function paginate () {
@@ -476,8 +500,9 @@ function paginate () {
 			// clear the div first
 			$('#coll_docs').empty();
 
+			let viewType = localStorage.getItem('view');
 			let table = `
-				<div class="col-xs-12 col-md-12 col-lg-12 no-wrap">
+				<div class="col-xs-12 col-md-12 col-lg-12 no-wrap ${viewType == 'list' ? 'd-none' : ''} table-cells">
 					<div class="d-inline-block">
 						<table class="table table-bordered bg-grey">
 							<thead>
@@ -488,13 +513,7 @@ function paginate () {
 					</div>
 					<div class="d-inline-block">
 						<table class="table table-bordered">
-							<thead>
-								<tr class="text-white">
-									<th class="bg-danger">删除</th>
-									<th class="bg-info">查看</th>
-									<th class="bg-success">编辑</th>
-								</tr>
-							</thead>
+							<thead id="operatTh"></thead>
 							<tbody id="operatorLines"></tbody>
 						</table>
 					</div>
@@ -506,8 +525,8 @@ function paginate () {
 			let keys = [];
 			for (let i = 0; i < response.data.length; i++) {
 				escaper[0].textContent = JSON.stringify(response.data[i], null, 4);
-				let inner_html = `<div class="col-xs-12 col-md-10 col-lg-10 no-side-pad d-none"><pre class="code-block ${docClass}"><i class="fa fa-chevron-down code-block_expand"></i><code class="json">${escaper[0].innerHTML}</code></pre></div>`;
-				inner_html += '<div class="col-md-2 col-lg-2 pad-bottom no-pad-right justifiedButtons d-none">';
+				let inner_html = `<div class="col-xs-12 col-md-10 col-lg-10 no-side-pad ${viewType == 'table' ? 'd-none' : ''} list-cells"><pre class="code-block ${docClass}"><i class="fa fa-chevron-down code-block_expand"></i><code class="json">${escaper[0].innerHTML}</code></pre></div>`;
+				inner_html += `<div class="col-md-2 col-lg-2 pad-bottom no-pad-right justifiedButtons ${viewType == 'table' ? 'd-none' : ''} list-cells">`;
 				inner_html += '<div class="btn-group btn-group-justified justifiedButtons" role="group" aria-label="...">';
 				inner_html += `<a href="#" class="btn btn-danger btn-sm" onclick="deleteDoc('${response.data[i]._id}')">${response.deleteButton}</a>`;
 				inner_html += `<a href="${$('#app_context').val()}/app/${conn_name}/${db_name}/${coll_name}/${response.data[i]._id}" class="btn btn-info btn-sm">${response.linkButton}</a>`;
@@ -550,7 +569,16 @@ function paginate () {
 				$('#operatorLines').append(`<tr>${operatorCells.join('')}</tr>`);
 
 			}
-			$('#docKeys').append(thGenerator(keys));
+			if (keys.length) {
+				$('#operatTh').append(`
+				<tr class="text-white">
+					<th class="bg-danger">删除</th>
+					<th class="bg-info">查看</th>
+					<th class="bg-success">编辑</th>
+				</tr>
+			`);
+				$('#docKeys').append(thGenerator(keys));
+			}
 
 			// Bind the DropDown Select For Fields
 			let option = '';
