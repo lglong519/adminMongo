@@ -197,6 +197,9 @@ After selecting your collection from the "Database Objects" menu, you will be pr
 *The collections screen*
 ![adminMongo collections screen](https://raw.githubusercontent.com/mrvautin/mrvautin.github.io/master/images/adminMongo/adminMongo_collectionview.png "adminMongo collections screen")
 
+*The collections new screen*
+![adminMongo collections screen](screenShot/collections-new-screen.png "adminMongo collections new screen")
+
 ### Searching/Querying documents
 
 You can perform searches of documents using the `Search documents` button on the collections screen. You will need to enter the key (field name) and value. Eg: key = "_id" and value = "569ff81e0077663d78a114ce" (Only works on string "_id" fields - Use "Query Documents" for ObjectID's).
