@@ -24,3 +24,14 @@ pre {
 
 .text-white {
   color: #fff; }
+
+#docLines td {
+  position: relative; }
+  #docLines td pre {
+    z-index: 10;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    color: #001fce; }
+  #docLines td:hover pre {
+    display: block; }

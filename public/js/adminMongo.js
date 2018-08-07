@@ -5,7 +5,17 @@ $(document).ready(() => {
 			show_notification(localStorage.getItem('message_text'), 'success');
 			localStorage.setItem('message_text', '');
 		}
-		paginate();
+		paginate().then(() => {
+			// 点击链接按钮后，将按钮链接本地储存，如果当前页面地址与链接一致则显示文档详情
+			// 可以在显示 table 的同时显示 JSON
+			$('.link-doc').click(function (event) {
+				localStorage.setItem('link', this.href);
+			});
+			if (location.href === localStorage.getItem('link')) {
+				$('.list-cells>pre').parent().removeClass('d-none');
+				$('.table-cells').removeClass('d-none');
+			}
+		});
 	}
 
 	// checks localstorage for sidemenu being opened/closed state
@@ -391,6 +401,10 @@ $(document).ready(() => {
 			localStorage.setItem('view', 'list');
 		}
 	}
+	/*
+		coll-list JSON的形式
+		coll-table 表格的形式
+	*/
 	viewTypes.forEach(type => {
 		$(`#viewType .coll-${type}`).click(function () {
 			if ($(this).hasClass('label-success')) {
@@ -437,7 +451,7 @@ function paginate () {
 	let api_url = `${$('#app_context').val()}/api/${conn_name}/${db_name}/${coll_name}/${page_num}`;
 	let pager_href = `${$('#app_context').val()}/app/${conn_name}/${db_name}/${coll_name}/view/{{number}}`;
 
-	$.ajax({
+	return $.ajax({
 		type: 'POST',
 		dataType: 'json',
 		url: api_url,
@@ -529,7 +543,7 @@ function paginate () {
 				inner_html += `<div class="col-md-2 col-lg-2 pad-bottom no-pad-right justifiedButtons ${viewType == 'table' ? 'd-none' : ''} list-cells">`;
 				inner_html += '<div class="btn-group btn-group-justified justifiedButtons" role="group" aria-label="...">';
 				inner_html += `<a href="#" class="btn btn-danger btn-sm" onclick="deleteDoc('${response.data[i]._id}')">${response.deleteButton}</a>`;
-				inner_html += `<a href="${$('#app_context').val()}/app/${conn_name}/${db_name}/${coll_name}/${response.data[i]._id}" class="btn btn-info btn-sm">${response.linkButton}</a>`;
+				inner_html += `<a href="${$('#app_context').val()}/app/${conn_name}/${db_name}/${coll_name}/${response.data[i]._id}" class="btn btn-info btn-sm link-doc">${response.linkButton}</a>`;
 				inner_html += `<a href="${$('#app_context').val()}/app/${conn_name}/${db_name}/${coll_name}/edit/${response.data[i]._id}" class="btn btn-success btn-sm">${response.editButton}</a>`;
 				inner_html += '</div></div>';
 				$('#coll_docs').append(inner_html);
@@ -548,11 +562,11 @@ function paginate () {
 					let prop = response.data[i][key];
 					let type = Object.prototype.toString.call(prop);
 					if (type === '[object Object]') {
-						cellsUpdate(cells, index, '{Object}');
+						cellsUpdate(cells, index, '{Object}', prop);
 						continue;
 					}
 					if (type === '[object Array]') {
-						cellsUpdate(cells, index, '[Array]');
+						cellsUpdate(cells, index, '[Array]', prop);
 						continue;
 					}
 					if ((/^\d{4}-\d{2}-\d{2}T(.*)?Z$/).test(prop)) {
@@ -564,7 +578,7 @@ function paginate () {
 
 				let operatorCells = cellGenerator(3);
 				cellsUpdate(operatorCells, 0, `<a href="#" onclick="deleteDoc('${response.data[i]._id}')">${response.deleteButton}</a>`);
-				cellsUpdate(operatorCells, 1, `<a href="${$('#app_context').val()}/app/${conn_name}/${db_name}/${coll_name}/${response.data[i]._id}">${response.linkButton}</a>`);
+				cellsUpdate(operatorCells, 1, `<a class="link-doc" href="${$('#app_context').val()}/app/${conn_name}/${db_name}/${coll_name}/${response.data[i]._id}">${response.linkButton}</a>`);
 				cellsUpdate(operatorCells, 2, `<a href="${$('#app_context').val()}/app/${conn_name}/${db_name}/${coll_name}/edit/${response.data[i]._id}">${response.editButton}</a>`);
 				$('#operatorLines').append(`<tr>${operatorCells.join('')}</tr>`);
 
@@ -782,7 +796,10 @@ function cellGenerator (length) {
 	}
 	return tds;
 }
-function cellsUpdate (cells, index, val) {
+function cellsUpdate (cells, index, val, subContent = '') {
+	if (subContent) {
+		val += `<pre class="d-none">${JSON.stringify(subContent, null, 4)}</pre>`;
+	}
 	if (index !== undefined) {
 		cells[index] = cells[index].replace('null', val);
 	} else {
