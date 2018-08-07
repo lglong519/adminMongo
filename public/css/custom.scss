@@ -34,12 +34,16 @@ pre{
 		pre{
 			z-index: 10;
 			position: absolute;
-			left: 100%;
 			top: 0;
 			color: rgb(0, 31, 206);
-		}
-		&:hover pre{
-			display: block;
+			&.p-right{
+				display: block;
+				left: 100%;
+			}
+			&.p-left{
+				display: block;
+				right: 100%;
+			}
 		}
 	}
 }

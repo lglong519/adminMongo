@@ -15,6 +15,16 @@ $(document).ready(() => {
 				$('.list-cells>pre').parent().removeClass('d-none');
 				$('.table-cells').removeClass('d-none');
 			}
+			$('#docLines td>pre').parent().on('mouseenter', function (e) {
+				if (e.offsetX > $(this).width() / 2) {
+					$(this).children('pre').addClass('p-right').removeClass('p-left');
+				} else {
+					$(this).children('pre').addClass('p-left').removeClass('p-right');
+				}
+			});
+			$('#docLines td>pre').parent().mouseleave(function (e) {
+				$(this).children('pre').removeClass('p-left p-right');
+			});
 		});
 	}
 
