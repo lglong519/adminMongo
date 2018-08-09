@@ -130,5 +130,6 @@
 	"Backup": "备份",
 	"Database successfully backed up": "数据库备份成功",
 	"Query": "查询",
-	"Indexes": "索引"
+	"Indexes": "索引",
+	"Docs per page": "每页显示"
 }
