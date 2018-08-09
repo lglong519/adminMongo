@@ -429,6 +429,19 @@ $(document).ready(() => {
 			localStorage.setItem('view', type);
 		});
 	});
+	/*
+		跳转到选中的 collection
+	*/
+	let coll_name = $('#coll_name').val();
+	let db_name = $('#db_name').val();
+	if (db_name && coll_name) {
+		let currentColl = `${db_name}_${coll_name}`;
+		$('#sidebar').animate(
+			{ scrollTop: $(`#${currentColl}`).offset().top - $(window).height() / 2 },
+			{ duration: 500, easing: 'swing' }
+		);
+		$(`#${currentColl}`).addClass('active');
+	}
 });
 
 function paginate () {

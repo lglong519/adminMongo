@@ -20,6 +20,17 @@ pre{
 
 .d-inline-block{
 	display: inline-block;
+	>.table{
+		font-size: 13px;
+		>thead,>tbody{
+			>tr{
+				td,th{
+					padding-left: 6px;
+					padding-right: 6px;
+				}
+			}
+		}
+	}
 }
 .no-wrap{
 	white-space:nowrap;

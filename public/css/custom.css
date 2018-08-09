@@ -18,6 +18,11 @@ pre {
 
 .d-inline-block {
   display: inline-block; }
+  .d-inline-block > .table {
+    font-size: 13px; }
+    .d-inline-block > .table > thead > tr td, .d-inline-block > .table > thead > tr th, .d-inline-block > .table > tbody > tr td, .d-inline-block > .table > tbody > tr th {
+      padding-left: 6px;
+      padding-right: 6px; }
 
 .no-wrap {
   white-space: nowrap; }
