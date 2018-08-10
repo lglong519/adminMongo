@@ -29,6 +29,7 @@ let app = express();
 
 // setup the translation
 let i18n = new (require('i18n-2'))({
+	extension: '.json',
 	locales: ['en', 'de', 'es', 'ru', 'zh-cn'],
 	directory: path.join(dir_base, 'locales/')
 });
