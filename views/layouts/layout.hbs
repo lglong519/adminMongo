@@ -176,6 +176,7 @@
                     <p>{{__ "BSON types are not supported"}}</p>
                 </div>
                 <div class="modal-body">
+						 <form id="searchForm">
                     <div class="form-group">
                         <label for="recipient-name" class="control-label">{{__ "Key (Field)"}}:</label>
                         <select class="form-control" id="search_key_fields"></select>
@@ -184,6 +185,33 @@
                         <label for="message-text" class="control-label">{{__ "Value"}}</label>
                         <input type="text" class="form-control" id="search_value_value" placeholder="{{__ "Value"}}">
                     </div>
+						  <div>
+							  <label>
+									<input type="radio" name="inputType" id="input-Oid" value="Oid">
+									Oid
+								</label>
+							  <label>
+									<input type="radio" name="inputType" id="input-Str" value="Str">
+									Str
+								</label>
+							  <label>
+									<input type="radio" name="inputType" id="input-Num" value="Num">
+									Num
+								</label>
+								<label>
+									<input type="radio" name="inputType" id="input-Bool" value="Bool">
+									Bool
+								</label>
+								<label>
+									<input type="radio" name="inputType" id="input-Date" value="Date">
+									Date
+								</label>
+								<label>
+									<input type="radio" name="inputType" id="input-ISO" value="ISO">
+									ISO
+								</label>
+							</div>
+							</form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default btn-sm pull-left" data-dismiss="modal">{{__ "Close"}}</button>

@@ -115,37 +115,54 @@ $(document).ready(() => {
 		window.location = `${$('#app_context').val()}/app/${$('#conn_name').val()}/${$('#db_name').val()}/${$('#coll_name').val()}/view/1`;
 	});
 
+	// 输入搜索内容自动切换数据类型
+	let onclick = false;
+	$('#searchForm input:radio').click(() => {
+		onclick = true;
+	});
+	$('#search_value_value').on('input blur focus', function () {
+		let key_name = $('#search_key_fields option:selected').text();
+		if (key_name === '_id') {
+			$('#input-Oid').prop('checked', true);
+			return;
+		}
+		if (!onclick) {
+			if ((/^[\d.]+$/).test(this.value)) {
+				$('#input-Num').prop('checked', true);
+			} else if ((/^(true|false)$/).test(this.value)) {
+				$('#input-Bool').prop('checked', true);
+			} else {
+				$('#input-Str').prop('checked', true);
+			}
+		}
+	});
+
 	// set the URL search parameters
 	$(document).on('click', '#searchModalAction', () => {
 		let key_name = $('#search_key_fields option:selected').text();
 		let val = $('#search_value_value').val();
-
 		if (key_name !== '' && val !== '') {
 			// build the simply key/value query object and call paginate();
 			let qry_obj = {};
-
-			// check if value is a number/integer
-			let intReg = new RegExp('^[0-9]+$');
-			if (val.match(intReg)) {
-				val = parseInt(val);
-			} else {
-				// if we find an integer wrapped in quotes
-				let strIntReg = new RegExp('^"[0-9]"+$');
-				if (val.match(strIntReg)) {
-					val = val.replace(/"/g, '');
-				}
+			let query_string;
+			let type = $('#searchForm input:radio:checked').val();
+			// 根据选择的类型查询文档，支持的类型有 Oid(ObjectId),Str,Num,Bool,Date,ISO(ISODate)
+			switch (type) {
+				case 'Oid': query_string = toEJSON.serializeString(`{"${key_name}":ObjectId("${val}")}`); break;
+				case 'Date': query_string = toEJSON.serializeString(`{"${key_name}":ISODate("${new Date(val).toISOString()}")}`); break;
+				case 'ISO': query_string = toEJSON.serializeString(`{"${key_name}":ISODate("${val}")}`); break;
+				case 'Num': val = parseInt(val); break;
+				case 'Bool': val = val === 'true'; break;
+				default: val = String(val);
 			}
 
 			qry_obj[key_name] = val;
 
-			// set the object to local storage to be used if page changes
-			localStorage.setItem('searchQuery', JSON.stringify(qry_obj));
-
-			// check if the key_name is "_id"
-			if (key_name == '_id') {
-				let query_string = toEJSON.serializeString(`{"_id":ObjectId("${val}")}`);
-				localStorage.setItem('searchQuery', query_string);
+			if (!query_string) {
+				query_string = JSON.stringify(qry_obj);
 			}
+			// set the object to local storage to be used if page changes
+			localStorage.setItem('searchQuery', query_string);
 
 			// go to page 1 to remove any issues being on page X from another query/view
 			window.location.href = `${$('#app_context').val()}/app/${$('#conn_name').val()}/${$('#db_name').val()}/${$('#coll_name').val()}/view/1`;
@@ -442,6 +459,10 @@ $(document).ready(() => {
 		);
 		$(`#${currentColl}`).addClass('active');
 	}
+
+	if (localStorage.getItem('searchQuery')) {
+		$('#searchQuery span').html(localStorage.getItem('searchQuery'));
+	}
 });
 
 function paginate () {
@@ -524,7 +545,7 @@ function paginate () {
 
 			// if filtered, change button text
 			if (query_string !== null) {
-				$('#btnMassDelete').html('Delete selected');
+				// $('#btnMassDelete').html('Delete selected');
 			}
 
 			// disable/enable the mass delete button if records are returned
@@ -540,7 +561,7 @@ function paginate () {
 			let viewType = localStorage.getItem('view');
 			let table = `
 				<div class="col-xs-12 col-md-12 col-lg-12 no-wrap ${viewType == 'list' ? 'd-none' : ''} table-cells">
-					<div class="d-inline-block">
+					<div class="d-inline-block normal-wrap">
 						<table class="table table-bordered bg-grey">
 							<thead>
 								<tr id="docKeys"></tr>
