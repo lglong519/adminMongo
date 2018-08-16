@@ -561,7 +561,7 @@ function paginate () {
 			let viewType = localStorage.getItem('view');
 			let table = `
 				<div class="col-xs-12 col-md-12 col-lg-12 no-wrap ${viewType == 'list' ? 'd-none' : ''} table-cells">
-					<div class="d-inline-block normal-wrap">
+					<div class="d-inline-block">
 						<table class="table table-bordered bg-grey">
 							<thead>
 								<tr id="docKeys"></tr>

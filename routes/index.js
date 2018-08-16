@@ -2,6 +2,8 @@ let express = require('express');
 let router = express.Router();
 let _ = require('lodash');
 let common = require('./common');
+let nconf = require('nconf');
+const reconnect = require('../common/reconnect');
 
 // runs on all routes and checks password if one is setup
 router.all('/*', common.checkLogin, (req, res, next) => {
@@ -78,8 +80,11 @@ router.post('/app/login_action', (req, res, next) => {
 });
 
 // Show/manage connections
-router.get('/app/connection_list', (req, res, next) => {
-	let connection_list = req.nconf.connections.get('connections');
+router.get('/app/connection_list', async (req, res, next) => {
+	if (!Object.keys(nconf.get('connections')).length) {
+		await reconnect(req);
+	}
+	let connection_list = nconf.get('connections');
 
 	res.render('connections', {
 		message: '',

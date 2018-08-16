@@ -274,7 +274,10 @@ async.forEachOf(
 		try {
 			MongoURI.parse(value.connection_string);
 			connPool.addConnection({ connName: key, connString: value.connection_string, connOptions: value.connection_options }, app, (err, data) => {
-				if (err) delete connection_list[key];
+				if (err) {
+					console.log(err);
+					delete connection_list[key];
+				}
 				callback();
 			});
 		} catch (err) {
