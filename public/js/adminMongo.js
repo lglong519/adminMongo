@@ -31,9 +31,9 @@ $(document).ready(() => {
 	// checks localstorage for sidemenu being opened/closed state
 	$('.mainMenu').each(function (index) {
 		let menu = $(this).text().trim().toString();
-		if (window.localStorage.getItem(menu) === 'closed') {
-			$(this).addClass('collapsed');
-			$(this).nextUntil('.mainMenu').slideUp('fast');
+		if (window.localStorage.getItem(menu) === 'opened') {
+			$(this).removeClass('collapsed');
+			$(this).nextUntil('.mainMenu').slideDown('fast');
 		}
 	});
 
