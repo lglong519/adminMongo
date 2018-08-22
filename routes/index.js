@@ -163,7 +163,7 @@ router.get('/app/:conn', (req, res, next) => {
 		});
 	});
 });
-
+// 选择数据库
 // The base route at the DB level showing all collections for DB
 router.get('/app/:conn/:db', (req, res, next) => {
 	let connection_list = req.app.locals.dbConnections;
@@ -207,12 +207,12 @@ router.get('/app/:conn/:db', (req, res, next) => {
 
 // Pagination redirect to page 1
 router.get('/app/:conn/:db/:coll/', (req, res, next) => {
-	res.redirect(`${req.app_context}/app/${req.params.conn}/${req.params.db}/${req.params.coll}/view/1`);
+	res.redirect(`${req.app_context}/app/${req.params.conn}/${req.params.db}/${req.params.coll}/view/1?db=${req.query.db}`);
 });
 
 // Pagination redirect to page 1
 router.get('/app/:conn/:db/:coll/view/', (req, res, next) => {
-	res.redirect(`${req.app_context}/app/${req.params.conn}/${req.params.db}/${req.params.coll}/view/1`);
+	res.redirect(`${req.app_context}/app/${req.params.conn}/${req.params.db}/${req.params.coll}/view/1?db=${req.query.db}`);
 });
 
 // Shows the document preview/pagination
@@ -232,6 +232,14 @@ router.get('/app/:conn/:db/:coll/view/:page_num', (req, res, next) => {
 		return;
 	}
 
+	let db = req.params.db;
+	if (req.query.db !== req.params.db) {
+		let MongoURI = require('mongo-uri');
+		let conn_string = connection_list[req.params.conn].connString;
+		let uri = MongoURI.parse(conn_string);
+		db = uri.database;
+	}
+
 	// Get DB's form pool
 	let mongo_db = connection_list[req.params.conn].native.db(req.params.db);
 
@@ -239,7 +247,7 @@ router.get('/app/:conn/:db/:coll/view/:page_num', (req, res, next) => {
 	mongo_db.listCollections().toArray((err, collection_list) => {
 		// clean up the collection list
 		collection_list = common.cleanCollections(collection_list);
-		common.get_sidebar_list(mongo_db, req.params.db, (err, sidebar_list) => {
+		common.get_sidebar_list(mongo_db, db, (err, sidebar_list) => {
 			mongo_db.db(req.params.db).collection(req.params.coll).count((err, coll_count) => {
 				if (collection_list.indexOf(req.params.coll) === -1) {
 					common.render_error(res, req, 'Database or Collection does not exist', req.params.conn);

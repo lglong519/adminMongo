@@ -25,9 +25,15 @@ $(document).ready(() => {
 			$('#docLines td>pre').parent().mouseleave(function (e) {
 				$(this).children('pre').removeClass('p-left p-right');
 			});
+			// 分页添加数据库标示
+			$('#pager a').attr('href', (i, attr) => `${attr}?db=${sessionStorage.getItem('db')}`);
 		});
 	}
 
+	// 添加数据库标示
+	if (sessionStorage.getItem('db')) {
+		$('.sub-menu>a,.breadcrumb>li:eq(3)>a').attr('href', (i, attr) => `${attr}?db=${sessionStorage.getItem('db')}`);
+	}
 	// checks localstorage for sidemenu being opened/closed state
 	$('.mainMenu').each(function (index) {
 		let menu = $(this).text().trim().toString();
@@ -463,6 +469,15 @@ $(document).ready(() => {
 	if (localStorage.getItem('searchQuery')) {
 		$('#searchQuery span').html(localStorage.getItem('searchQuery'));
 	}
+
+	// 设置数据库标示
+	$('.breadcrumb>li:eq(2)>a').click(() => {
+		sessionStorage.setItem('db', db_name);
+	});
+	// 清除数据库标示
+	$('.breadcrumb>li:lt(2)>a,#navbar li:eq(1) a,#sidebar .list-group>li:eq(1) a,#sidebar .list-group:eq(1)>li:lt(2) a').click(() => {
+		sessionStorage.removeItem('db');
+	});
 });
 
 function paginate () {
