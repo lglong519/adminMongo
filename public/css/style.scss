@@ -304,6 +304,8 @@ body {
 }
 
 .action_button {
+	position: relative;
+	z-index: 1;
 	margin-bottom: 20px;
 }
 

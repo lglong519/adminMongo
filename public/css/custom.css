@@ -46,3 +46,7 @@ pre {
     #docLines td pre.p-left {
       display: block;
       right: 100%; }
+
+#submit_json {
+  position: relative;
+  z-index: 1; }

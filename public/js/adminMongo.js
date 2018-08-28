@@ -159,6 +159,13 @@ $(document).ready(() => {
 				case 'ISO': query_string = toEJSON.serializeString(`{"${key_name}":ISODate("${val}")}`); break;
 				case 'Num': val = parseInt(val); break;
 				case 'Bool': val = val === 'true'; break;
+				case 'Obj':
+					try {
+						val = JSON.parse(val);
+					} catch (e) {
+						eval(`val=${val}`);
+					}
+					break;
 				default: val = String(val);
 			}
 
