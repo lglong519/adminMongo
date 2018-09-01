@@ -8,8 +8,8 @@ const replace = require('gulp-replace');
 nconf.file('.config');
 nconf.required([
 	'SERVER',
-	'USER_NAME',
-	'HOST',
+	'SERVER_USERNAME',
+	'SERVER_HOST',
 	'SSH_PORT',
 	'LOCAL_KEY',
 	'PRIVATE_KEY',
@@ -26,9 +26,9 @@ if (!privateKey) {
 	throw new SyntaxError('Invalid privateKey');
 }
 const config = {
-	host: nconf.get('HOST'),
+	host: nconf.get('SERVER_HOST'),
 	port: nconf.get('SSH_PORT'),
-	username: nconf.get('USER_NAME'),
+	username: nconf.get('SERVER_USERNAME'),
 	privateKey
 };
 
@@ -49,11 +49,6 @@ gulp.task('dest', () => gulp
 	.pipe(gulpSSH.dest(nconf.get('SERVER'))));
 
 gulp.task('sftp-read-logs', () => {
-	let logs = [
-		'.log',
-		'server.log',
-		'connect.log',
-	];
 	let pm2Logs = [
 		'mongo-error.log',
 		'mongo-out.log',
@@ -72,9 +67,6 @@ gulp.task('sftp-read-logs', () => {
 				});
 		}));
 	}
-	logs.forEach(log => {
-		cPromise(promises, nconf.get('SERVER'), log);
-	});
 	pm2Logs.forEach(log => {
 		cPromise(promises, '/root/.pm2/logs/', log);
 	});

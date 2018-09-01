@@ -170,7 +170,15 @@ if (nconf.stores.app.get('app:context') !== undefined) {
 	app_context = `/${nconf.stores.app.get('app:context')}`;
 }
 
-app.use(logger('dev'));
+app.use(logger('dev', {
+	skip (req, res) {
+		let reg = /^\/(favicon.ico|logo|css|js|fonts|highlightjs|bootstrap|adminMongo|chart|editor|jquery|moment|servermonitoring|toEJSON)/i;
+		if (reg.test(req.url) || reg.test(req.originalUrl)) {
+			return true;
+		}
+		return false;
+	}
+}));
 app.use(bodyParser.json({ limit: '16mb' }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());

@@ -13,7 +13,8 @@
     "url": "https://github.com/mrvautin/adminmongo/issues"
   },
   "scripts": {
-    "dev": "supervisor --no-restart-on error app",
+	 "dev": "supervisor --no-restart-on error app",
+	 "deploy":"gulp deploy",
     "eslint": "gulp eslint",
     "start": "node app.js",
     "test": "find ./tests -name '*.js' | xargs mocha -R spec -t 5000",
@@ -80,8 +81,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "colors": "^1.1.2",
-    "eslint": "^5.2.0",
-    "eslint-config-teslint": "^3.0.2",
+    "eslint-config-teslint": "latest",
     "eslint-plugin-promise": "^2.0.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^5.0.0",
