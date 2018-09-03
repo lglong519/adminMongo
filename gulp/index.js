@@ -15,4 +15,4 @@ gulp.task('watch', () => {
 	gulp.watch('./public/css/*.scss', ['scss']);
 });
 
-gulp.task('dev', ['scss', 'watch']);
+gulp.task('dev', gulp.parallel('scss', 'watch'));

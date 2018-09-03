@@ -13,7 +13,7 @@ exports.checkLogin = function (req, res, next) {
 			next();
 		} else {
 			// if the session exists we continue, else renter login page
-			if (req.session.loggedIn) {
+			if (req.session.user) {
 				next(); // allow the next route to run
 			} else {
 				res.redirect(`${req.app_context}/app/login`);

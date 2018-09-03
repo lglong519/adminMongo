@@ -4,6 +4,7 @@ let _ = require('lodash');
 let common = require('./common');
 let nconf = require('nconf');
 const reconnect = require('../common/reconnect');
+const request = require('request');
 
 // runs on all routes and checks password if one is setup
 router.all('/*', common.checkLogin, (req, res, next) => {
@@ -54,7 +55,7 @@ router.get('/app/login', (req, res, next) => {
 
 // logout
 router.get('/app/logout', (req, res, next) => {
-	req.session.loggedIn = null;
+	req.session.user = null;
 	res.redirect(`${req.app_context}/app`);
 });
 
@@ -64,9 +65,32 @@ router.post('/app/login_action', (req, res, next) => {
 
 	if (passwordConf && passwordConf.hasOwnProperty('password')) {
 		if (req.body.inputPassword === passwordConf.password) {
-			// password is ok, go to home
-			req.session.loggedIn = true;
-			res.redirect(`${req.app_context}/`);
+			let { login, password, client } = passwordConf;
+			request.post(
+				{
+					url: 'http://dev.mofunc.com/services/access-tokens',
+					method: 'POST',
+					json: true,
+					body: { login, password, client },
+				},
+				(err, response, body) => {
+					let error;
+					if (err) {
+						error = err;
+					}
+					if (response.statusCode < 300) {
+						// password is ok, go to home
+						Object.assign(req.session, body);
+						return res.redirect(`${req.app_context}/`);
+					}
+					error || (error = body);
+					console.error('access-token err:', error);
+					res.render('login', {
+						message: error,
+						helpers: req.handlebars.helpers
+					});
+				}
+			);
 		} else {
 			// password is wrong. Show login form with a message
 			res.render('login', {
