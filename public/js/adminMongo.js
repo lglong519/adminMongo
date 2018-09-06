@@ -147,6 +147,18 @@ $(document).ready(() => {
 	$(document).on('click', '#searchModalAction', () => {
 		let key_name = $('#search_key_fields option:selected').text();
 		let val = $('#search_value_value').val();
+
+		if ($('#sortToggle').prop('checked')) {
+			let sort_key = $('#sort_key_fields option:selected').text();
+			let sort = { [sort_key]: 1 };
+			if ($('#sortDesc').prop('checked')) {
+				sort[sort_key] = -1;
+			}
+			localStorage.setItem('sort', JSON.stringify(sort));
+		} else {
+			localStorage.removeItem('sort');
+		}
+
 		if (key_name !== '' && val !== '') {
 			// build the simply key/value query object and call paginate();
 			let qry_obj = {};
@@ -181,14 +193,17 @@ $(document).ready(() => {
 			}
 			// set the object to local storage to be used if page changes
 			localStorage.setItem('searchQuery', query_string);
-
 			// go to page 1 to remove any issues being on page X from another query/view
 			window.location.href = `${$('#app_context').val()}/app/${$('#conn_name').val()}/${$('#db_name').val()}/${$('#coll_name').val()}/view/1`;
 
 			// close the searchModal
 			$('#searchModal').modal('hide');
 		} else {
-			show_notification('Please enter a key (field) and a value to search for', 'danger');
+			if (localStorage.getItem('sort')) {
+				window.location.href = `${$('#app_context').val()}/app/${$('#conn_name').val()}/${$('#db_name').val()}/${$('#coll_name').val()}/view/1`;
+			} else {
+				show_notification('Please enter a key (field) and a value to search for', 'danger');
+			}
 		}
 	});
 
@@ -517,7 +532,7 @@ function paginate () {
 		query_string = localStorage.getItem('searchQuery');
 		query_string = toEJSON.serializeString(query_string);
 	}
-
+	let sort = localStorage.getItem('sort') || '{"_id":1}';
 	// add search to the API URL if it exists
 	let api_url = `${$('#app_context').val()}/api/${conn_name}/${db_name}/${coll_name}/${page_num}`;
 	let pager_href = `${$('#app_context').val()}/app/${conn_name}/${db_name}/${coll_name}/view/{{number}}`;
@@ -526,7 +541,7 @@ function paginate () {
 		type: 'POST',
 		dataType: 'json',
 		url: api_url,
-		data: { 'query': query_string, 'docsPerPage': page_len }
+		data: { 'query': query_string, 'docsPerPage': page_len, sort }
 	})
 		.done(response => {
 			// show message when none are found
@@ -671,6 +686,7 @@ function paginate () {
 				option += `<option value="${response.fields[x]}">${response.fields[x]}</option>`;
 			}
 			$('#search_key_fields').append(option);
+			$('#sort_key_fields').append(option);
 
 			// hide the loading placeholder
 			$('#doc_load_placeholder').hide();

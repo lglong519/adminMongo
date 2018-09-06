@@ -42,6 +42,7 @@ router.post('/api/:conn/:db/:coll/:page', (req, res, next) => {
 	let limit = page_size;
 
 	let query_obj = {};
+	let sort = {};
 	let validQuery = true;
 	let queryMessage = '';
 	if (req.body.query) {
@@ -53,13 +54,16 @@ router.post('/api/:conn/:db/:coll/:page', (req, res, next) => {
 			query_obj = {};
 		}
 	}
+	if (req.body.sort) {
+		sort = JSON.parse(req.body.sort);
+	}
 
-	mongo_db.collection(req.params.coll).find(query_obj, { skip, limit }).toArray((err, result) => {
+	mongo_db.collection(req.params.coll).find(query_obj, { skip, limit, sort }).toArray((err, result) => {
 		if (err) {
 			console.error(err);
 			res.status(500).json(err);
 		} else {
-			mongo_db.collection(req.params.coll).find({}, { skip, limit }).toArray((err, simpleSearchFields) => {
+			mongo_db.collection(req.params.coll).find({}, { skip, limit, sort }).toArray((err, simpleSearchFields) => {
 				// get field names/keys of the Documents in collection
 				let fields = [];
 				for (let i = 0; i < simpleSearchFields.length; i++) {

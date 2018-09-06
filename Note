@@ -1,0 +1,5 @@
+connection_string 数据库地址（mongodb://127.0.0.1）
+uri （connection_string+connection_options）
+conn 自定义的连接名（dev）
+db 数据库名称（s001）
+coll collection 名称
