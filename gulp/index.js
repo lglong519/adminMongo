@@ -4,7 +4,7 @@ const sass = require('gulp-sass');
 const stripCssComments = require('gulp-strip-css-comments');
 
 gulp.task('scss', () => {
-	gulp.src('./public/css/*.scss')
+	return gulp.src('./public/css/*.scss')
 		.pipe(sass())
 		.pipe(stripCssComments())
 		.pipe(autoprefixer('last 2 version'))

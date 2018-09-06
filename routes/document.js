@@ -39,7 +39,7 @@ router.post('/document/:conn/:db/:coll/insert_doc', (req, res, next) => {
 		mongo_db.collection(req.params.coll).insertMany(eJsonData, (err, docs) => {
 			if (err || docs.ops === undefined) {
 				console.error('Error inserting documents', err);
-				res.status(400).json({ 'msg': req.i18n.__('Error inserting documents') });
+				res.status(400).json({ 'msg': req.i18n.__('Error inserting documents'), error: err });
 			} else {
 				// get the first inserted doc
 				let dataReturn = '';
@@ -54,7 +54,7 @@ router.post('/document/:conn/:db/:coll/insert_doc', (req, res, next) => {
 		mongo_db.collection(req.params.coll).save(eJsonData, (err, docs) => {
 			if (err || docs.ops === undefined) {
 				console.error('Error inserting document', err);
-				res.status(400).json({ 'msg': req.i18n.__('Error inserting document') });
+				res.status(400).json({ 'msg': req.i18n.__('Error inserting document'), error: err });
 			} else {
 				let dataReturn = '';
 				if (docs.ops) {

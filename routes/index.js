@@ -105,13 +105,18 @@ router.post('/app/login_action', (req, res, next) => {
 
 // Show/manage connections
 router.get('/app/connection_list', async (req, res, next) => {
+	let error;
 	if (!Object.keys(nconf.get('connections')).length) {
-		await reconnect(req);
+		error = await reconnect(req);
 	}
-	let connection_list = nconf.get('connections');
 
+	let connection_list = nconf.get('connections');
+	let message = '';
+	if (error) {
+		message = error.message;
+	}
 	res.render('connections', {
-		message: '',
+		message,
 		editor: true,
 		connection_list: common.order_object(connection_list),
 		helpers: req.handlebars.helpers

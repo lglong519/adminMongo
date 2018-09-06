@@ -8,6 +8,7 @@ module.exports = req => {
 
 	let MongoURI = require('mongo-uri');
 
+	let error;
 	let promises = Object.keys(connection_list).map(key => {
 		const value = connection_list[key];
 		MongoURI.parse(value.connection_string);
@@ -15,6 +16,7 @@ module.exports = req => {
 			connPool.addConnection({ connName: key, connString: value.connection_string, connOptions: value.connection_options }, req.app, (err, data) => {
 				if (err) {
 					console.log(err);
+					error = err;
 					delete connection_list[key];
 					console.log('list', connection_list);
 
@@ -26,5 +28,6 @@ module.exports = req => {
 	return Promise.all(promises).then(() => {
 		nconf.set('connections', connection_list);
 		console.log('\x1B[33mReconnect done...\x1B[39m');
+		return error;
 	});
 };

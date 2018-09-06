@@ -48,13 +48,19 @@ body {
 		background-color: #2c3e50;
 		color: #F2F5F7;
 		border: 0px;
-
+		padding: 3px 10px;
 		&:hover,&.active {
 			background-color: rgba(255, 255, 255, 0.1);
 		}
 
 		a {
+			font-size: 14px;
 			color: rgba(255, 255, 255, 0.75);
+		}
+	}
+	.sub-menu{
+		.fa-table{
+			color: #46b8da;
 		}
 	}
 }

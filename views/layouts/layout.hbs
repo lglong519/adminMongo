@@ -176,46 +176,88 @@
                     <p>{{__ "BSON types are not supported"}}</p>
                 </div>
                 <div class="modal-body">
-						 <form id="searchForm">
-                    <div class="form-group">
-                        <label for="recipient-name" class="control-label">{{__ "Key (Field)"}}:</label>
-                        <select class="form-control" id="search_key_fields"></select>
-                    </div>
-                    <div class="form-group">
-                        <label for="message-text" class="control-label">{{__ "Value"}}</label>
-                        <input type="text" class="form-control" id="search_value_value" placeholder="{{__ "Value"}}">
-                    </div>
-						  <div>
-							  <label>
-									<input type="radio" name="inputType" id="input-Oid" value="Oid">
-									Oid
-								</label>
-							  <label>
-									<input type="radio" name="inputType" id="input-Str" value="Str">
-									Str
-								</label>
-							  <label>
-									<input type="radio" name="inputType" id="input-Num" value="Num">
-									Num
-								</label>
-								<label>
-									<input type="radio" name="inputType" id="input-Bool" value="Bool">
-									Bool
-								</label>
-								<label>
-									<input type="radio" name="inputType" id="input-Date" value="Date">
-									Date
-								</label>
-								<label>
-									<input type="radio" name="inputType" id="input-ISO" value="ISO">
-									ISO
-								</label>
-								<label>
-									<input type="radio" name="inputType" id="input-Obj" value="Obj">
-									Obj
-								</label>
-							</div>
-							</form>
+					<form id="searchForm">
+						<div class="form-group">
+							<label for="recipient-name" class="control-label">{{__ "Key (Field)"}}:</label>
+							<select class="form-control" id="search_key_fields"></select>
+						</div>
+						<div class="form-group">
+							<label for="message-text" class="control-label">{{__ "Value"}}</label>
+							<input type="text" class="form-control" id="search_value_value" placeholder="{{__ "Value"}}">
+						</div>
+						{{!--数据类型 --}}
+						<div>
+							<label title="数据类型">
+								数据:
+							</label>
+							<label title="ObjectId">
+								<input type="radio" name="inputType" id="input-Oid" value="Oid">
+								Oid
+							</label>
+							<label title="String">
+								<input type="radio" name="inputType" id="input-Str" value="Str">
+								Str
+							</label>
+							<label title="Number">
+								<input type="radio" name="inputType" id="input-Num" value="Num">
+								Num
+							</label>
+							<label title="Boolean">
+								<input type="radio" name="inputType" id="input-Bool" value="Bool">
+								Bool
+							</label>
+							<label title="合法的时间格式">
+								<input type="radio" name="inputType" id="input-Date" value="Date">
+								Date
+							</label>
+							<label title="ISODate">
+								<input type="radio" name="inputType" id="input-ISO" value="ISO">
+								ISO
+							</label>
+							<label title="Object">
+								<input type="radio" name="inputType" id="input-Obj" value="Obj">
+								Obj
+							</label>
+						</div>
+						{{!--条件 --}}
+						<div>
+							<label>
+								条件:
+							</label>
+							<label title="大于">
+								<input type="radio" name="filterType" id="filter-$gt" value="$gt">
+								>
+							</label>
+							<label title="大于或等于">
+								<input type="radio" name="filterType" id="filter-$gte" value="$gte">
+								>=
+							</label>
+							<label title="小于">
+								<input type="radio" name="filterType" id="filter-$lt" value="$lt">
+								<
+							</label>
+							<label title="小于或等于">
+								<input type="radio" name="filterType" id="filter-$lte" value="$lte">
+								<=
+							</label>
+							<label title="排除">
+								<input type="radio" name="filterType" id="filter-$ne" value="$ne">
+								!
+							</label>
+							<label title="包含">
+								<input type="radio" name="filterType" id="filter-$in" value="$in">
+								in
+							</label>
+							<label title="多条件排除">
+								<input type="radio" name="filterType" id="filter-$nin" value="$nin">
+								nin
+							</label>
+							<label title="多条件包含">
+								<input type="radio" name="filterType" id="filter-$all" value="$all">
+								all
+							</label>
+						</div>
+					</form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default btn-sm pull-left" data-dismiss="modal">{{__ "Close"}}</button>

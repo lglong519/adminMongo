@@ -132,5 +132,6 @@
 	"Query": "查询",
 	"Indexes": "索引",
 	"Docs per page": "每页显示",
-	"Delete all": "全部删除"
+	"Delete all": "全部删除",
+	"Error updating document": "文档修改错误"
 }

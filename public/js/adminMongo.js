@@ -151,7 +151,9 @@ $(document).ready(() => {
 			// build the simply key/value query object and call paginate();
 			let qry_obj = {};
 			let query_string;
-			let type = $('#searchForm input:radio:checked').val();
+			let type = $('#searchForm input[name=inputType]:checked').val();
+			let filterType = $('#searchForm input[name=filterType]:checked').val();
+
 			// 根据选择的类型查询文档，支持的类型有 Oid(ObjectId),Str,Num,Bool,Date,ISO(ISODate)
 			switch (type) {
 				case 'Oid': query_string = toEJSON.serializeString(`{"${key_name}":ObjectId("${val}")}`); break;
@@ -168,8 +170,11 @@ $(document).ready(() => {
 					break;
 				default: val = String(val);
 			}
-
-			qry_obj[key_name] = val;
+			if (filterType) {
+				qry_obj[key_name] = { [filterType]: val };
+			} else {
+				qry_obj[key_name] = val;
+			}
 
 			if (!query_string) {
 				query_string = JSON.stringify(qry_obj);
