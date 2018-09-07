@@ -73,3 +73,9 @@ pre {
     bottom: 11px;
     width: 0;
     border-right: 1px dotted #e0e0e0; }
+  .list-cells .code-block {
+    position: relative;
+    z-index: 5; }
+
+#sort_key_fields {
+  display: none; }

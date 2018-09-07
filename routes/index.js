@@ -72,18 +72,21 @@ router.post('/app/login_action', (req, res, next) => {
 					method: 'POST',
 					json: true,
 					body: { login, password, client },
+					headers: {
+						'x-serve': 'service'
+					}
 				},
 				(err, response, body) => {
 					let error;
 					if (err) {
-						error = err;
+						error = JSON.stringify(err);
 					}
 					if (response.statusCode < 300) {
 						// password is ok, go to home
 						Object.assign(req.session, body);
 						return res.redirect(`${req.app_context}/`);
 					}
-					error || (error = body);
+					error || (error = JSON.stringify(body));
 					console.error('access-token err:', error);
 					res.render('login', {
 						message: error,

@@ -256,16 +256,21 @@
 								<input type="radio" name="filterType" id="filter-$all" value="$all">
 								all
 							</label>
+							<label title="正则匹配">
+								<input type="radio" name="filterType" id="filter-$regex" value="$regex">
+								regex
+							</label>
 						</div>
 						{{!--排序 --}}
 						<div>
 							<label>
 								排序:
 								<input type="checkbox" name="sort-toggle" id="sortToggle">
+								开启
 							</label>
 							<label>
-								降序:
 								<input type="checkbox" name="sort-desc" id="sortDesc">
+								降序
 							</label>
 							<select class="form-control" id="sort_key_fields"></select>
 						</div>

@@ -8,7 +8,7 @@ $(document).ready(() => {
 		paginate().then(() => {
 			// 点击链接按钮后，将按钮链接本地储存，如果当前页面地址与链接一致则显示文档详情
 			// 可以在显示 table 的同时显示 JSON
-			$('.link-doc').click(function (event) {
+			$('.link-doc').click(function () {
 				localStorage.setItem('link', this.href);
 			});
 			if (location.href === localStorage.getItem('link')) {
@@ -22,7 +22,7 @@ $(document).ready(() => {
 					$(this).children('pre').addClass('p-left').removeClass('p-right');
 				}
 			});
-			$('#docLines td>pre').parent().mouseleave(function (e) {
+			$('#docLines td>pre').parent().mouseleave(function () {
 				$(this).children('pre').removeClass('p-left p-right');
 			});
 			// 分页添加数据库标示
@@ -35,8 +35,12 @@ $(document).ready(() => {
 			$('.code-block').each(function () {
 				this.addEventListener('wheel', () => {
 					if (event.offsetX < $('.code-mask').width()) {
-						$('.code-mask').show();
-						event.preventDefault();
+						if ($(this).children('.json').height() > $(this).height()) {
+							$('.code-mask').show();
+							event.preventDefault();
+						} else {
+							$('.code-mask').hide();
+						}
 					}
 				});
 			});
@@ -48,7 +52,7 @@ $(document).ready(() => {
 		$('.sub-menu>a,.breadcrumb>li:eq(3)>a').attr('href', (i, attr) => `${attr}?db=${sessionStorage.getItem('db')}`);
 	}
 	// checks localstorage for sidemenu being opened/closed state
-	$('.mainMenu').each(function (index) {
+	$('.mainMenu').each(function () {
 		let menu = $(this).text().trim().toString();
 		if (window.localStorage.getItem(menu) === 'opened') {
 			$(this).removeClass('collapsed');
@@ -168,8 +172,6 @@ $(document).ready(() => {
 				sort[sort_key] = -1;
 			}
 			localStorage.setItem('sort', JSON.stringify(sort));
-		} else {
-			localStorage.removeItem('sort');
 		}
 
 		if (key_name !== '' && val !== '') {
@@ -212,12 +214,18 @@ $(document).ready(() => {
 			// close the searchModal
 			$('#searchModal').modal('hide');
 		} else {
-			if (localStorage.getItem('sort')) {
+			if ($('#sortToggle').prop('checked')) {
 				window.location.href = `${$('#app_context').val()}/app/${$('#conn_name').val()}/${$('#db_name').val()}/${$('#coll_name').val()}/view/1`;
 			} else {
 				show_notification('Please enter a key (field) and a value to search for', 'danger');
 			}
 		}
+	});
+
+	// 清除排序
+	$('#searchQuery button').click(() => {
+		localStorage.removeItem('sort');
+		window.location.href = `${$('#app_context').val()}/app/${$('#conn_name').val()}/${$('#db_name').val()}/${$('#coll_name').val()}/view/1`;
 	});
 
 	$(document).on('click', '#coll_name_edit', () => {
@@ -507,9 +515,13 @@ $(document).ready(() => {
 	}
 
 	if (localStorage.getItem('searchQuery')) {
-		$('#searchQuery span').html(localStorage.getItem('searchQuery'));
+		$('#searchQuery span:first-child').html(localStorage.getItem('searchQuery'));
 	}
-
+	if (localStorage.getItem('sort')) {
+		$('#searchQuery span:nth-child(3)').html(localStorage.getItem('sort'));
+	} else {
+		$('#searchQuery button').hide();
+	}
 	// 设置数据库标示
 	$('.breadcrumb>li:eq(2)>a').click(() => {
 		sessionStorage.setItem('db', db_name);
@@ -517,6 +529,13 @@ $(document).ready(() => {
 	// 清除数据库标示
 	$('.breadcrumb>li:lt(2)>a,#navbar li:eq(1) a,#sidebar .list-group>li:eq(1) a,#sidebar .list-group:eq(1)>li:lt(2) a').click(() => {
 		sessionStorage.removeItem('db');
+	});
+	$('#sortToggle').change(function () {
+		if (this.checked) {
+			$('#sort_key_fields').show();
+		} else {
+			$('#sort_key_fields').hide();
+		}
 	});
 });
 
@@ -708,7 +727,7 @@ function paginate () {
 			hljs.configure({ languages: ['json'] });
 			$('.code-block').each((i, block) => {
 				hljs.highlightBlock(block);
-				$(block).find('.code-block_expand').click(event => {
+				$(block).find('.code-block_expand').click(() => {
 					$(block).toggleClass('expanded');
 				});
 			});
