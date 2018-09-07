@@ -13,14 +13,18 @@ pre {
 
 .bg-grey {
   background-color: #F7F7F9; }
-  .bg-grey th, .bg-grey td {
+  .bg-grey th,
+  .bg-grey td {
     background-color: #fff; }
 
 .d-inline-block {
   display: inline-block; }
   .d-inline-block > .table {
     font-size: 13px; }
-    .d-inline-block > .table > thead > tr td, .d-inline-block > .table > thead > tr th, .d-inline-block > .table > tbody > tr td, .d-inline-block > .table > tbody > tr th {
+    .d-inline-block > .table > thead > tr td,
+    .d-inline-block > .table > thead > tr th,
+    .d-inline-block > .table > tbody > tr td,
+    .d-inline-block > .table > tbody > tr th {
       padding-left: 6px;
       padding-right: 6px; }
 
@@ -50,3 +54,22 @@ pre {
 #submit_json {
   position: relative;
   z-index: 1; }
+
+.list-cells {
+  position: relative; }
+  .list-cells .code-mask {
+    display: none;
+    z-index: 10;
+    position: absolute;
+    left: 0;
+    right: 3em;
+    top: 0;
+    bottom: 11px; }
+  .list-cells .scroll-view {
+    z-index: 10;
+    position: absolute;
+    right: 3em;
+    top: 0;
+    bottom: 11px;
+    width: 0;
+    border-right: 1px dotted #e0e0e0; }

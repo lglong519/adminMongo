@@ -27,6 +27,19 @@ $(document).ready(() => {
 			});
 			// 分页添加数据库标示
 			$('#pager a').attr('href', (i, attr) => `${attr}?db=${sessionStorage.getItem('db')}`);
+
+			// 禁止 list 模式下 json 文档的滚动事件，只允许 Body 滚动
+			$('.code-mask').click(function () {
+				$(this).hide();
+			});
+			$('.code-block').each(function () {
+				this.addEventListener('wheel', () => {
+					if (event.offsetX < $('.code-mask').width()) {
+						$('.code-mask').show();
+						event.preventDefault();
+					}
+				});
+			});
 		});
 	}
 
@@ -625,7 +638,7 @@ function paginate () {
 			let keys = [];
 			for (let i = 0; i < response.data.length; i++) {
 				escaper[0].textContent = JSON.stringify(response.data[i], null, 4);
-				let inner_html = `<div class="col-xs-12 col-md-10 col-lg-10 no-side-pad ${viewType == 'table' ? 'd-none' : ''} list-cells"><pre class="code-block ${docClass}"><i class="fa fa-chevron-down code-block_expand"></i><code class="json">${escaper[0].innerHTML}</code></pre></div>`;
+				let inner_html = `<div class="col-xs-12 col-md-10 col-lg-10 no-side-pad ${viewType == 'table' ? 'd-none' : ''} list-cells"><div class="scroll-view"></div><div class="code-mask"></div><pre class="code-block ${docClass}"><i class="fa fa-chevron-down code-block_expand"></i><code class="json">${escaper[0].innerHTML}</code></pre></div>`;
 				inner_html += `<div class="col-md-2 col-lg-2 pad-bottom no-pad-right justifiedButtons ${viewType == 'table' ? 'd-none' : ''} list-cells">`;
 				inner_html += '<div class="btn-group btn-group-justified justifiedButtons" role="group" aria-label="...">';
 				inner_html += `<a href="#" class="btn btn-danger btn-sm" onclick="deleteDoc('${response.data[i]._id}')">${response.deleteButton}</a>`;
