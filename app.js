@@ -9,6 +9,7 @@ let session = require('express-session');
 let async = require('async');
 let moment = require('moment');
 let fs = require('fs');
+nconf.file('.config');
 
 // Define routes
 let indexRoute = require('./routes/index');

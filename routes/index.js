@@ -66,9 +66,13 @@ router.post('/app/login_action', (req, res, next) => {
 	if (passwordConf && passwordConf.hasOwnProperty('password')) {
 		if (req.body.inputPassword === passwordConf.password) {
 			let { login, password, client } = passwordConf;
+			let url = 'http://dev.mofunc.com/services/access-tokens';
+			if (nconf.get('MODE') === 'localhost') {
+				url = 'http://localhost:50901/services/access-tokens';
+			}
 			request.post(
 				{
-					url: 'http://dev.mofunc.com/services/access-tokens',
+					url,
 					method: 'POST',
 					json: true,
 					body: { login, password, client },
@@ -224,7 +228,7 @@ router.get('/app/:conn/:db', (req, res, next) => {
 						conn_list: common.order_object(connection_list),
 						db_stats,
 						conn_users,
-						coll_list: common.cleanCollections(collection_list),
+						coll_list: common.cleanCollections(collection_list).sort(),
 						db_name: req.params.db,
 						show_db_name: true,
 						sidebar_list,

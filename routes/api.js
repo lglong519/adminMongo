@@ -76,7 +76,7 @@ router.post('/api/:conn/:db/:coll/:page', (req, res, next) => {
 				}
 
 				fields = fields.filter((item, pos) => fields.indexOf(item) === pos);
-
+				fields.sort();
 				// get total num docs in query
 				mongo_db.collection(req.params.coll).count(query_obj, (err, doc_count) => {
 					let return_data = {
