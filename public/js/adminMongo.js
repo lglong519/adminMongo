@@ -183,9 +183,9 @@ $(document).ready(() => {
 
 			// 根据选择的类型查询文档，支持的类型有 Oid(ObjectId),Str,Num,Bool,Date,ISO(ISODate)
 			switch (type) {
-				case 'Oid': query_string = toEJSON.serializeString(`{"${key_name}":ObjectId("${val}")}`); break;
-				case 'Date': query_string = toEJSON.serializeString(`{"${key_name}":ISODate("${new Date(val).toISOString()}")}`); break;
-				case 'ISO': query_string = toEJSON.serializeString(`{"${key_name}":ISODate("${val}")}`); break;
+				case 'Oid': val = { $oid: val }; break;
+				case 'Date': val = { $date: new Date(val).toISOString() }; break;
+				case 'ISO': val = { $date: val }; break;
 				case 'Num': val = parseInt(val); break;
 				case 'Bool': val = val === 'true'; break;
 				case 'Obj':
