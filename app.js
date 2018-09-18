@@ -12,7 +12,7 @@ let fs = require('fs');
 nconf.file('.config');
 
 // Define routes
-let indexRoute = require('./routes/index');
+let indexRoute = require('./routes/app');
 let apiRoute = require('./routes/api');
 let usersRoute = require('./routes/users');
 let configRoute = require('./routes/config');
