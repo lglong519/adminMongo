@@ -27,7 +27,14 @@ $(document).ready(() => {
 			});
 			// 分页添加数据库标示
 			$('#pager a').attr('href', (i, attr) => `${attr}?db=${sessionStorage.getItem('db')}`);
-
+			// 修复分页按钮 >> 多次跳转
+			$('#pager a').click(function () {
+				if (this.parentNode.className.includes('disabled')) {
+					return false;
+				}
+				window.location.href = this.href;
+				return false;
+			});
 			// 禁止 list 模式下 json 文档的滚动事件，只允许 Body 滚动
 			$('.code-mask').click(function () {
 				$(this).hide();
