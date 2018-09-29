@@ -13,7 +13,7 @@
     "url": "https://github.com/mrvautin/adminmongo/issues"
   },
   "scripts": {
-    "dev": "supervisor --no-restart-on error app",
+    "dev": "supervisor -i './public' --no-restart-on error app",
     "deploy": "gulp deploy",
     "eslint": "gulp eslint",
     "config": "gulp sftp-write && gulp start-server",

@@ -525,6 +525,7 @@ $(document).ready(() => {
 		$('#searchQuery span:first-child').html(localStorage.getItem('searchQuery'));
 	}
 	if (localStorage.getItem('sort')) {
+		$('#searchQuery button').removeClass('hidden');
 		$('#searchQuery span:nth-child(3)').html(localStorage.getItem('sort'));
 	} else {
 		$('#searchQuery button').hide();
@@ -541,7 +542,14 @@ $(document).ready(() => {
 		if (this.checked) {
 			$('#sort_key_fields').show();
 		} else {
+			$('#sortDesc').prop('checked', false);
 			$('#sort_key_fields').hide();
+		}
+	});
+	$('#sortDesc').change(function () {
+		if (this.checked) {
+			$('#sortToggle').prop('checked', true);
+			$('#sort_key_fields').show();
 		}
 	});
 });
@@ -566,7 +574,11 @@ function paginate () {
 	// get the query (if any)
 	let query_string;
 	if (doc_id) {
-		query_string = toEJSON.serializeString(`{"_id":ObjectId("${doc_id}")}`);
+		if ((/^\d*$/).test(doc_id)) {
+			query_string = `{"_id":${doc_id}}`;
+		} else {
+			query_string = toEJSON.serializeString(`{"_id":ObjectId("${doc_id}")}`);
+		}
 	} else {
 		query_string = localStorage.getItem('searchQuery');
 		query_string = toEJSON.serializeString(query_string);

@@ -36,12 +36,14 @@ const gulpSSH = new GulpSSH({
 	sshConfig: config
 });
 const destGlobs = [
-	'./**/*.*',
 	'./**/*',
-	'!**/node_modules/**',
-	'!**/logs/**',
-	'!**/config/**',
-	'!*.log',
+	'!./node_modules/**',
+	'!./config/**',
+	'!./logs/**',
+	'!./backups/**',
+	'!./data/**',
+	'!./screenShot/**',
+	'!./tests/**',
 ];
 gulp.task('dest', () => gulp
 	.src(destGlobs)
